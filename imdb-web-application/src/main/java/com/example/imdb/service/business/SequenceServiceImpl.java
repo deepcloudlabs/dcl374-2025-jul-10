@@ -3,7 +3,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.example.imdb.model.Servis;
 import com.example.imdb.service.SequenceService;
 
 /**
@@ -11,7 +10,7 @@ import com.example.imdb.service.SequenceService;
  * @author Binnur Kurt
  *
  */
-@Servis
+//@Servis
 // default scope: Singleton
 //@Scope("singleton") --> default
 //@Scope("session")

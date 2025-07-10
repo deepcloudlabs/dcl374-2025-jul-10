@@ -37,6 +37,7 @@ public class InMemoryMovieService implements MovieService {
 	// 1. No-arg Constructor
 	// 2. Dependency Injection: I. Field Injection II. Constructor Injection III. Setter Injection
 	// 3. Life-Cycle Callback Annotations: @PostConstruct, @PreDestroy, ...
+	// @Autowired
 	public InMemoryMovieService(SequenceService sequenceSrv) {
 		this.sequenceSrv = sequenceSrv;
 		System.out.println("sequenceSrv is injected through constructor (%s)".formatted(sequenceSrv.getClass().getName()));
