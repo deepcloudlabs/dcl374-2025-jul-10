@@ -2,7 +2,9 @@ package com.example.lottery.service.business;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.example.lottery.service.QualityLevel;
@@ -10,7 +12,9 @@ import com.example.lottery.service.QualityOfService;
 import com.example.lottery.service.RandomNumberService;
 
 @Service
-@QualityOfService(QualityLevel.FAST)
+//@QualityOfService(QualityLevel.FAST)
+//@ConditionalOnProperty(name="serviceQuality",havingValue = "fast")
+@Profile({"dev"})
 public class FastRandomNumberService implements RandomNumberService {
 
 	@Override

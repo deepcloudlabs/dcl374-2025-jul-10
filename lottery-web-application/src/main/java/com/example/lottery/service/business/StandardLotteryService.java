@@ -1,12 +1,13 @@
 package com.example.lottery.service.business;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.bind.ConstructorBinding;
 import org.springframework.stereotype.Service;
 
+import com.example.lottery.config.LotteryConfig;
 import com.example.lottery.dto.LotteryModel;
 import com.example.lottery.service.LotteryService;
 import com.example.lottery.service.RandomNumberService;
@@ -14,23 +15,25 @@ import com.example.lottery.service.RandomNumberService;
 @Service
 public class StandardLotteryService implements LotteryService {
 
-	/*
 	private final RandomNumberService randomNumberService;
-
-	public StandardLotteryService(
-			@QualityOfService(QualityLevel.SECURE) RandomNumberService randomNumberService) {
-		this.randomNumberService = randomNumberService;
-	}
-    */
+	private final LotteryConfig lotteryConfig;
 	
+	public StandardLotteryService(RandomNumberService randomNumberService, LotteryConfig lotteryConfig) {
+		this.randomNumberService = randomNumberService;
+		this.lotteryConfig = lotteryConfig;
+		System.err.println(lotteryConfig);
+	}
+	/*
 	private final List<RandomNumberService> randomNumberServices;
 	private final Map<String,RandomNumberService> mapRandomNumberServices;
 	private static final AtomicInteger counter = new AtomicInteger(0);
-	
 	public StandardLotteryService(List<RandomNumberService> randomNumberServices,Map<String,RandomNumberService> mapRandomNumberServices) {
 		this.randomNumberServices = randomNumberServices;
 		this.mapRandomNumberServices = mapRandomNumberServices;
 	}
+    */
+	
+	
 
 	@Override
 	public List<LotteryModel> draw(int column) {
@@ -40,11 +43,11 @@ public class StandardLotteryService implements LotteryService {
 	}
 
 	public LotteryModel draw() {
-	    var randomNumberService = randomNumberServices.get(counter.getAndIncrement()%randomNumberServices.size());
+//	    var randomNumberService = randomNumberServices.get(counter.getAndIncrement()%randomNumberServices.size());
 		return new LotteryModel(
-				IntStream.generate(() -> randomNumberService.generate(1,60))
+				IntStream.generate(() -> randomNumberService.generate(1,lotteryConfig.max()))
 		         .distinct()
-		         .limit(6)
+		         .limit(lotteryConfig.size())
 		         .sorted()
 		         .boxed()
 		         .toList());
