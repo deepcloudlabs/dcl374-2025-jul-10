@@ -3,8 +3,6 @@ package com.example.lottery.service.business;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.bind.ConstructorBinding;
 import org.springframework.stereotype.Service;
 
 import com.example.lottery.config.LotteryConfig;

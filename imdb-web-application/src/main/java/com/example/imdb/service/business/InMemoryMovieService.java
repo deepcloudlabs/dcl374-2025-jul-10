@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.annotation.RequestScope;
-
 import com.example.imdb.domain.Director;
 import com.example.imdb.domain.Genre;
 import com.example.imdb.domain.Movie;
