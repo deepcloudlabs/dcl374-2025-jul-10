@@ -23,7 +23,6 @@ import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 
 /**
  * 
@@ -34,14 +33,17 @@ import jakarta.persistence.Version;
 @Table(name = "Country")
 @DynamicUpdate
 @DynamicInsert
-@NamedEntityGraphs({
+@NamedEntityGraphs(
+	{
 		@NamedEntityGraph(name = "graph.Country.cities", attributeNodes = @NamedAttributeNode(value = "cities", subgraph = "cities"), subgraphs = @NamedSubgraph(name = "cities", attributeNodes = @NamedAttributeNode("country"))),
 		@NamedEntityGraph(name = "graph.Country.citylangs", attributeNodes = {
 				@NamedAttributeNode(value = "cities", subgraph = "cities"),
 				@NamedAttributeNode(value = "languages", subgraph = "languages") }, subgraphs = {
 						@NamedSubgraph(name = "cities", attributeNodes = @NamedAttributeNode("country")),
 						@NamedSubgraph(name = "languages", attributeNodes = @NamedAttributeNode("country")) }),
-		@NamedEntityGraph(name = "graph.Country.languages", attributeNodes = @NamedAttributeNode(value = "languages", subgraph = "languages"), subgraphs = @NamedSubgraph(name = "languages", attributeNodes = @NamedAttributeNode("country"))) })
+		@NamedEntityGraph(name = "graph.Country.languages", attributeNodes = @NamedAttributeNode(value = "languages", subgraph = "languages"), subgraphs = @NamedSubgraph(name = "languages", attributeNodes = @NamedAttributeNode("country"))) 
+	}
+)
 @JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class,
 		property = "kod"
@@ -71,8 +73,7 @@ public class Country {
 	@JoinTable()
 	@JsonIgnore
 	private Set<CountryLanguage> languages;
-	@Version
-	int versiyon;
+
 	public Country() {
 	}
 

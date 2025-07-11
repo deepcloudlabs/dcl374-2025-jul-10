@@ -31,7 +31,7 @@ public class AppConfig {
 	private int maxTotal;
 
 	@Bean
-	public DataSource dataSource() {
+	DataSource dataSource() {
 		BasicDataSource ds = new BasicDataSource();
 		ds.setUrl(url);
 		ds.setUsername(username);
@@ -42,7 +42,7 @@ public class AppConfig {
 	}
 
 	@Bean
-	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+	JdbcTemplate jdbcTemplate(DataSource dataSource) {
 		return new JdbcTemplate(dataSource);
 	}
 }

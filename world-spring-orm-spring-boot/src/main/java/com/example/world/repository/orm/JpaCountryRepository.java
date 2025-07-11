@@ -15,6 +15,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import com.example.world.entity.Country;
 import com.example.world.repository.CountryRepository;
 
+import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 
 /**
@@ -83,7 +84,9 @@ public class JpaCountryRepository implements CountryRepository {
 
 	public Collection<Country> getByContinent(String continent) {
 		System.err.println("getByContinent(%s)".formatted(continent));
+		EntityGraph<?> graph = entityManager.getEntityGraph("Country.withCapitalAndCities");
 		return entityManager.createNamedQuery("Country.findByContinent", Country.class)
+				.setHint("jakarta.persistence.fetchgraph", graph)
 				.setParameter("continent", continent)
 				.getResultList();
 	}

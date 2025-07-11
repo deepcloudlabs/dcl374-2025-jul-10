@@ -3,12 +3,12 @@ package com.example.world;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.world.entity.Country;
 import com.example.world.repository.CountryRepository;
@@ -26,7 +26,7 @@ import com.mongodb.client.DistinctIterable;
 // Spring Data Redis
 // Spring Data ElasticSearch
 @SpringBootApplication
-public class WorldBootDataRestApplication implements CommandLineRunner {
+public class WorldBootDataRestApplication implements ApplicationRunner {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorldBootDataRestApplication.class);
 
 	@Autowired
@@ -41,15 +41,14 @@ public class WorldBootDataRestApplication implements CommandLineRunner {
 	}
 
 	@Override
-	@Transactional
-	public void run(String... arg0) throws Exception {
+	public void run(ApplicationArguments args) throws Exception {
 		countryRepository.findTop10ByOrderByPopulationDesc()
 				         .forEach(System.out::println);
 		System.err.println("From mongodb:");
 		mongoCountryRepository.findTop10ByOrderByPopulationDesc()
 		                      .forEach(System.err::println);
 		System.err.println("Done.");
-		Specification<Country> asianHighPopulated = (root, query, criteriaBuilder) -> {
+		Specification<Country> asianHighPopulated = (root, _, criteriaBuilder) -> {
 			return criteriaBuilder.and(criteriaBuilder.gt(root.get("population"), 100_000_000),
 					criteriaBuilder.equal(root.get("continent"), "Asia"),
 					criteriaBuilder.gt(root.get("surface"), 1_000_000.));

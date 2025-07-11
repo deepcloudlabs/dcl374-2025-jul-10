@@ -5,13 +5,18 @@ import java.util.List;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
@@ -28,11 +33,34 @@ import jakarta.persistence.Table;
 @DynamicUpdate
 @DynamicInsert
 // JPA Query Language: JPQL
-@NamedQueries({ 
+@NamedQueries(
+	{ 
 	    @NamedQuery(name = "Country.findAll", query = "select c from Country c"),
 		@NamedQuery(name = "Country.findByContinent", 
 		    query = "select c from Country c where c.continent=:continent"),
-		@NamedQuery(name = "Country.findContinents", query = "select distinct(c.continent) from Country c ") })
+		@NamedQuery(name = "Country.findContinents", query = "select distinct(c.continent) from Country c ") 
+	}
+)
+@NamedEntityGraphs(
+	{
+		@NamedEntityGraph(
+				name = "Country.withCities", 
+				attributeNodes = {
+				    @NamedAttributeNode("cities")						
+				}),
+		@NamedEntityGraph(
+			    name = "Country.withCapitalAndCities",
+			    attributeNodes = {
+			        @NamedAttributeNode("capitalCity"),
+			        @NamedAttributeNode("cities")
+			    }
+			)
+	}
+)
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "kod"
+)
 public class Country {
 	@Id
 	@Column(name = "code")
