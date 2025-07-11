@@ -27,12 +27,15 @@ public class RefreshInstancesService {
 		var numberOfInstances = instances.stream()
 		         .mapToInt( instance -> {
 		        	     var refreshUrl = "http://%s:%d/%s/actuator/refresh".formatted(instance.getHost(),instance.getPort(),request.baseUrl());
-				     var headers = new HttpHeaders();
-				     headers.setContentType(MediaType.APPLICATION_JSON);
-				     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-				     var httpEntity = new HttpEntity<>(new RefreshRequest(),headers);
-		        	     var response = restTemplate.postForEntity(refreshUrl, httpEntity,String.class);
-		        	     System.out.println(response);
+					     var headers = new HttpHeaders();
+					     headers.setContentType(MediaType.APPLICATION_JSON);
+					     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+					     var httpEntity = new HttpEntity<>(new RefreshRequest(),headers);
+					     try {
+					    	 System.out.println(restTemplate.postForEntity(refreshUrl, httpEntity,String.class).getBody());
+					     }catch (Exception e) {
+							return 0;
+						}
 		        	     return 1;
 		         }).sum();
 		return new RefreshInstancesResponse(numberOfInstances, "Ok");
