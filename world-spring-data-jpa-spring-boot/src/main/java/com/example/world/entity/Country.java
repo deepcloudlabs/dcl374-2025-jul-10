@@ -1,22 +1,29 @@
 package com.example.world.entity;
 
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 /**
  * 
@@ -27,12 +34,18 @@ import jakarta.persistence.Table;
 @Table(name = "Country")
 @DynamicUpdate
 @DynamicInsert
-// JPA Query Language: JPQL
-@NamedQueries({ 
-	    @NamedQuery(name = "Country.findAll", query = "select c from Country c"),
-		@NamedQuery(name = "Country.findByContinent", 
-		    query = "select c from Country c where c.continent=:continent"),
-		@NamedQuery(name = "Country.findContinents", query = "select distinct(c.continent) from Country c ") })
+@NamedEntityGraphs({
+		@NamedEntityGraph(name = "graph.Country.cities", attributeNodes = @NamedAttributeNode(value = "cities", subgraph = "cities"), subgraphs = @NamedSubgraph(name = "cities", attributeNodes = @NamedAttributeNode("country"))),
+		@NamedEntityGraph(name = "graph.Country.citylangs", attributeNodes = {
+				@NamedAttributeNode(value = "cities", subgraph = "cities"),
+				@NamedAttributeNode(value = "languages", subgraph = "languages") }, subgraphs = {
+						@NamedSubgraph(name = "cities", attributeNodes = @NamedAttributeNode("country")),
+						@NamedSubgraph(name = "languages", attributeNodes = @NamedAttributeNode("country")) }),
+		@NamedEntityGraph(name = "graph.Country.languages", attributeNodes = @NamedAttributeNode(value = "languages", subgraph = "languages"), subgraphs = @NamedSubgraph(name = "languages", attributeNodes = @NamedAttributeNode("country"))) })
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "kod"
+)
 public class Country {
 	@Id
 	@Column(name = "code")
@@ -45,14 +58,21 @@ public class Country {
 	private Long population;
 	@Column(name = "surfacearea")
 	private Double surface;
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name = "capital")
+	@JsonIgnore
 	@JsonManagedReference
 	private City capitalCity;
-	@OneToMany(mappedBy = "country",fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "country")
+	@JsonIgnore
 	@JsonManagedReference
 	private List<City> cities;
-
+	@OneToMany
+	@JoinTable()
+	@JsonIgnore
+	private Set<CountryLanguage> languages;
+	@Version
+	int versiyon;
 	public Country() {
 	}
 
@@ -110,6 +130,14 @@ public class Country {
 
 	public void setCities(List<City> cities) {
 		this.cities = cities;
+	}
+
+	public Set<CountryLanguage> getLanguages() {
+		return languages;
+	}
+
+	public void setLanguages(Set<CountryLanguage> languages) {
+		this.languages = languages;
 	}
 
 	@Override

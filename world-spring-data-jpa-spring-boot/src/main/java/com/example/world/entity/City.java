@@ -1,6 +1,8 @@
 package com.example.world.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
@@ -21,6 +23,10 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "city")
 @Access(AccessType.FIELD)
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id"
+)
 public class City {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +37,7 @@ public class City {
 	private Long population;
 	@OneToOne
 	@JoinColumn(name = "countrycode")
-	@JsonBackReference
+	@JsonManagedReference
 	private Country country;
 
 	public City() {
