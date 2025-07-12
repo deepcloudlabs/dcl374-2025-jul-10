@@ -1,5 +1,8 @@
 package com.example.hr.controller;
 
+import java.security.Principal;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,17 +36,22 @@ public class HrRestController {
 	}
 
 	@PostMapping
-	public HireEmployeeResponse hireEmployee(@RequestBody @Validated HireEmployeeRequest request) {
+	@PreAuthorize("hasAuthority('ROLE_WEBUSER')")
+	public HireEmployeeResponse hireEmployee(@RequestBody @Validated HireEmployeeRequest request,Principal principal) {
+		System.err.println("Request has arrived from the user: %s".formatted(principal.getName()));
 		return hrService.hireEmployee(request);
 	}
 
 	@DeleteMapping("/{identity}")
-	public EmployeeResponse fireEmployee(@PathVariable @TcKimlikNo String identity){
+	@PreAuthorize("hasAuthority('ROLE_WEBUSER')")
+	public EmployeeResponse fireEmployee(@PathVariable @TcKimlikNo String identity,Principal principal){
+		System.err.println("Request has arrived from the user: %s".formatted(principal.getName()));
 		return hrService.fireEmployee(identity);
 	}
 
 	@GetMapping("/{identity}")
-	public EmployeeResponse findEmployeeByIdentity(@PathVariable @TcKimlikNo String identity) {
+	public EmployeeResponse findEmployeeByIdentity(@PathVariable @TcKimlikNo String identity,Principal principal) {
+		System.err.println("Request has arrived from the user: %s".formatted(principal.getName()));
 		return hrService.findEmployee(identity);
 	}
 	
