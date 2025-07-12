@@ -17,11 +17,14 @@ import com.example.hr.dto.response.HireEmployeeResponse;
 import com.example.hr.service.HrService;
 import com.example.validation.TcKimlikNo;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestScope
 @RequestMapping("/employees")
 @CrossOrigin
 @Validated
+@SecurityRequirement(name = "bearerAuth")
 public class HrRestController {
 	private final HrService hrService;
 	
