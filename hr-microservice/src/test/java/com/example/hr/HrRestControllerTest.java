@@ -62,9 +62,12 @@ class HrRestControllerTest {
 
 		when(hrService.hireEmployee(any(HireEmployeeRequest.class))).thenReturn(response);
 
+		// 2. Call exercise method
 		mockMvc.perform(post("/employees").contentType(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer %s".formatted(token))
-				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk())
+				.content(objectMapper.writeValueAsString(request)))
+		// 3. Verification
+		.andExpect(status().isOk())
 				.andExpect(jsonPath("$.status").value(status))
 		        .andExpect(jsonPath("$.identity").value(identity));
 	}
