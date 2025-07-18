@@ -17,11 +17,11 @@ public class Exercise02 {
 				new TradeEvent("orcl", 104,200)
 			);
 		var observable = new TradeObservable();
-		Observer slowObserver = (o,tradeEvent) -> {
+		Observer slowObserver = (_,tradeEvent) -> {
         	try {TimeUnit.SECONDS.sleep(5);}catch (Exception e) {}
         	System.err.println("Slow Observer has processed the event: "+tradeEvent);
         };
-        Observer fastObserver = (o,tradeEvent) -> {
+        Observer fastObserver = (_,tradeEvent) -> {
         	System.err.println("Fast Observer has processed the event: "+tradeEvent);
         };		
         observable.addObserver(slowObserver);

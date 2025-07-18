@@ -3,8 +3,6 @@ package com.example.actuator.aop;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -43,10 +41,9 @@ public class ProfileAspect {
 		var stop = System.nanoTime();
 		var duration = stop - start;
 		var counter = methodMetric.counter() + 1;
-		var totalTime = methodMetric.totalTime() + stop - start;
+		var totalTime = methodMetric.totalTime() + duration;
 		var averageTime = totalTime / counter;
 		methodMetrics.put(methodName, new MethodMetrics(className, methodName, counter, averageTime, totalTime));
-		var convertedDuration = profile.value().convert(duration, TimeUnit.NANOSECONDS);
 		return result;
 	}
 	
