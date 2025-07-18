@@ -6,9 +6,11 @@ import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 
+import com.example.actuator.aop.Profile;
 import com.example.actuator.dto.response.LotteryDTO;
 
 @Service
+@Profile
 public class LotteryService {
 
 	public List<LotteryDTO> draw(final int column) {

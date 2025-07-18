@@ -13,7 +13,7 @@ import com.example.actuator.service.LotteryService;
 @RestController
 @RequestMapping("/numbers")
 public class SampleRestController {
-
+	
 	private final LotteryService lotteryService;
 
 	public SampleRestController(LotteryService lotteryService) {
