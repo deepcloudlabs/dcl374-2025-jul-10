@@ -47,6 +47,6 @@ public class RestControllerErrorHandler {
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(code = HttpStatus.BAD_GATEWAY)
 	public ErrorResponse handleException(Exception e) {
-		return new ErrorResponse(e.getMessage(), e.getCause().toString());
+		return new ErrorResponse(e.getMessage(), e.getMessage());
 	}
 }

@@ -36,14 +36,14 @@ public class HrRestController {
 	}
 
 	@PostMapping
-	@PreAuthorize("hasAuthority('ROLE_WEBUSER')")
+	@PreAuthorize("hasRole('ROLE_WEBUSER')")
 	public HireEmployeeResponse hireEmployee(@RequestBody @Validated HireEmployeeRequest request,Principal principal) {
 		System.err.println("Request has arrived from the user: %s".formatted(principal.getName()));
 		return hrService.hireEmployee(request);
 	}
 
 	@DeleteMapping("/{identity}")
-	@PreAuthorize("hasAuthority('ROLE_WEBUSER')")
+	@PreAuthorize("hasRole('ROLE_WEBUSER')")
 	public EmployeeResponse fireEmployee(@PathVariable @TcKimlikNo String identity,Principal principal){
 		System.err.println("Request has arrived from the user: %s".formatted(principal.getName()));
 		return hrService.fireEmployee(identity);
