@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,11 +30,12 @@ public class SecurityConfig {
 	}
 	
     @Bean
+    @SuppressWarnings("unchecked")
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
 
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            List<String> roles = jwt.getClaimAsMap("resource_access") != null ?
+			List<String> roles = jwt.getClaimAsMap("resource_access") != null ?
                 ((Map<String, Object>) ((Map<String, Object>) jwt.getClaim("resource_access")).get("aselsan-client"))
                         .getOrDefault("roles", List.of())
                         .toString()
